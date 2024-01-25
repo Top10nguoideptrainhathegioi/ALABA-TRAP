@@ -1,0 +1,67 @@
+def calculate_gpa(grades_and_credits):
+    total_credits = 0
+    weighted_sum = 0
+
+    for grade, credit in grades_and_credits:
+        try:
+            grade_points = float(grade)
+            total_credits += int(credit)
+            weighted_sum += grade_points * int(credit)
+        except ValueError:
+            print(f"Invalid input: {grade} or {credit} is not a valid number.")
+            return None
+
+    if total_credits == 0:
+        print("Total credits cannot be zero.")
+        return None
+
+    gpa = weighted_sum / total_credits
+    return gpa
+
+
+def print_gpa(student_name, gpa):
+    if gpa is not None:
+        print(f"\nGPA for {student_name}: {gpa:.2f}\n")
+    else:
+        print("Error calculating GPA. Please check your input.")
+
+
+def main():
+    try:
+        student_name = input("Enter your name: ")
+        if not student_name:
+            raise ValueError("Invalid name. Please enter a valid name.")
+
+        grades_and_credits = []
+
+        while True:
+            grade = input("Enter your course grade (or 'exit' to finish): ").upper()
+
+            if grade.upper() == 'EXIT':
+                break
+
+            credit = input("Enter corresponding credits: ")
+
+            if not grade or not credit:
+                print("Both grade and credit must be provided.")
+                continue
+
+            grades_and_credits.append((grade, credit))
+
+        gpa = calculate_gpa(grades_and_credits)
+
+        if gpa is not None:
+            print_gpa(student_name, gpa)
+
+            # Save results to a text file
+            try:
+                with open('gpa_results.txt', 'w') as file:
+                    file.write(f"{student_name}'s GPA: {gpa:.2f}\n")
+                print("Results saved to 'gpa_results.txt'.")
+            except IOError:
+                print("Error saving results to a file.")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
